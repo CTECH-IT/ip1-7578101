@@ -34,15 +34,16 @@ function test(){
 }
 
 function newShoot() {
-    if (spacebar==true){//makes new bullet
+    if (spacebar==true && h==0){//makes new bullet
+        bullets.push(shipX + shipWidth/2);
+        bullets.push(canvas.height-shipHeight-shootRadius);
+        numBullets+=1;
         h=1
     }
     if (h==1){
         if (spacebar==false){
         
-            bullets.push(shipX + shipWidth/2);
-            bullets.push(canvas.height-shipHeight-shootRadius);
-            numBullets+=1;
+            
             h=0
         }
     }
