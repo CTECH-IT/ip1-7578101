@@ -15,8 +15,15 @@ let dx = 5;
 let n = 0;
 let k = shipX;
 let spacebar = false;
-let ds = 5;
+let ds = 3.5;
 const bullets = [];
+const enemys = [];
+let numBullets = 0
+let x=0;
+let y=0;
+let h = 0;
+
+
 
 function test(){
     ctx.beginPath();
@@ -26,19 +33,51 @@ function test(){
     ctx.closePath();
 }
 
+function newShoot() {
+    if (spacebar==true){//makes new bullet
+        h=1
+    }
+    if (h==1){
+        if (spacebar==false){
+        
+            bullets.push(shipX + shipWidth/2);
+            bullets.push(canvas.height-shipHeight-shootRadius);
+            numBullets+=1;
+            h=0
+        }
+    }
+}
 
+function drawShoot() {//updates existing bullets
+    for (let i = 0; i <= numBullets*2; i+=2){
+        n=bullets[i+1];
+        k=bullets[i];
+        if (n > 0){
 
-function drawShoot() {
-    bullets.push(shipX + shipWidth/2);
-    bullets.push(canvas.height-shipHeight-shootRadius);
-    ctx.beginPath();
-    ctx.arc(k,n,shootRadius,0,2*Math.PI)
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-    n-=ds;
+        
+            ctx.beginPath();
+            ctx.arc(k,n,shootRadius,0,2*Math.PI)
+            ctx.fillStyle = "#EC1818";
+            ctx.fill();
+            ctx.closePath();
+            n-=ds;
+            bullets[i+1]=n;
+        }
+    }
+
     
 }
+
+function drawEnemy(){
+
+}
+
+
+
+
+
+
+
 
 function drawShip(){//draws the ship
     ctx.beginPath();
@@ -51,10 +90,8 @@ function drawShip(){//draws the ship
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawShip();
-    if (spacebar){
-        k = shipX + shipWidth/2;
-        n = canvas.height-shipHeight-shootRadius;
-    }
+    
+    newShoot();
     drawShoot();
 
     if(rightPressed) {
