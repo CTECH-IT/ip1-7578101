@@ -15,7 +15,7 @@ let dx = 5;
 let n = 0;
 let k = shipX;
 let spacebar = false;
-let ds = 3.5;
+let ds = 6;
 const bullets = [];
 const enemy1 = [];
 let numenemy1 = 0;
@@ -81,12 +81,20 @@ function drawEnemy(){
         x=enemy1[i];
         y=enemy1[i+1];
         z=enemy1[i+2];
-        if (y < canvas.height){
+        if (y < canvas.height && z>0){
 
         
             ctx.beginPath();
             ctx.rect(x,y,enemy1Width,enemy1Height);
-            ctx.fillStyle = "#EC1818";
+            if (z==3){
+              ctx.fillStyle = "#3EF51D";
+            }
+            if (z==2){
+              ctx.fillStyle = "#F5E81D";
+            }
+            if (z==1){
+              ctx.fillStyle = "#F22316";
+            }
             ctx.fill();
             ctx.closePath();
             y+=dEnemy1;
@@ -127,14 +135,14 @@ function enemy1Collision(){
         y=enemy1[i+1];
         z=enemy1[i+2];
         
-        if (y < canvas.height){
+        if (y < canvas.height && z>0){
             for (let l = 0; l <= numBullets*2; l+=2){
                 n=bullets[l+1];
                 k=bullets[l];
                 if (n > 0){
                     if ((y<n+shootRadius && y+enemy1Height>n-shootRadius) && (x<k+shootRadius && x+enemy1Width>k-shootRadius) ){
                         bullets[l+1]=0;
-                        
+                        enemy1[i+2]-=1;
                     }
 
                     
@@ -199,7 +207,7 @@ function keyDownHandler(e) {
     if(e.key=="ArrowUp" || e.code == "Space") {
         spacebar = true;
     }
-    if(e.key=="ArrowDown") {
+    if(e.key=="t") {
         down = true;
     }
 
@@ -215,7 +223,7 @@ function keyUpHandler(e) {
     if(e.key=="ArrowUp" || e.code == "Space") {
         spacebar = false;
     }
-    if(e.key=="ArrowDown") {
+    if(e.key=="t") {
         down = false;
     }
 }
