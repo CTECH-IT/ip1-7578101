@@ -17,21 +17,28 @@ let k = shipX;
 let spacebar = false;
 let ds = 3.5;
 const bullets = [];
-const enemys = [];
+const enemy1 = [];
+let numenemy1 = 0;
 let numBullets = 0
 let x=0;
 let y=0;
 let h = 0;
+let down = false;
+let h2 = 0;
+let enemy1Height = 30;
+let enemy1Width = 30;
+let dEnemy1 = 2
+let r=0;
 
 
+function randomInt(max) {
+    r = Math.floor(Math.random() * max);
+  }
 
-function test(){
-    ctx.beginPath();
-    ctx.arc(100,100,20,0,2*Math.PI);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    ctx.closePath();
-}
+  function randomNum(max) {
+    r = Math.random() * max;
+  }  
+
 
 function newShoot() {
     if (spacebar==true && h==0){//makes new bullet
@@ -70,7 +77,73 @@ function drawShoot() {//updates existing bullets
 }
 
 function drawEnemy(){
+    for (let i = 0; i <= numenemy1*3; i+=3){
+        x=enemy1[i];
+        y=enemy1[i+1];
+        z=enemy1[i+2];
+        if (y < canvas.height){
 
+        
+            ctx.beginPath();
+            ctx.rect(x,y,enemy1Width,enemy1Height);
+            ctx.fillStyle = "#EC1818";
+            ctx.fill();
+            ctx.closePath();
+            y+=dEnemy1;
+            enemy1[i+1]=y;
+        }
+    }
+}
+
+function newEnemy1(){//makes new enemy1
+    if ((down && h2==0)){
+        randomNum(canvas.width - enemy1Width);
+        enemy1.push(r);
+        enemy1.push(0);
+        enemy1.push(3);
+        numenemy1+=1;
+        h2=1
+    }
+    if (h2==1){
+        if (down==false){          
+            h2=0
+        }
+    }
+    randomInt(500);
+    q=r;
+    if (q==1){
+        randomNum(canvas.width - enemy1Width);
+        enemy1.push(r);
+        enemy1.push(0);
+        enemy1.push(3);
+        numenemy1+=1;
+        
+    }
+
+}
+function enemy1Collision(){
+    for (let i = 0; i <= numenemy1*3; i+=3){
+        x=enemy1[i];
+        y=enemy1[i+1];
+        z=enemy1[i+2];
+        
+        if (y < canvas.height){
+            for (let l = 0; l <= numBullets*2; l+=2){
+                n=bullets[l+1];
+                k=bullets[l];
+                if (n > 0){
+                    if ((y<n+shootRadius && y+enemy1Height>n-shootRadius) && (x<k+shootRadius && x+enemy1Width>k-shootRadius) ){
+                        bullets[l+1]=0;
+                        
+                    }
+
+                    
+                }
+            }
+        
+            
+        }
+    }
 }
 
 
@@ -94,7 +167,9 @@ function draw() {
     
     newShoot();
     drawShoot();
-
+    newEnemy1();
+    drawEnemy();
+    enemy1Collision();
     if(rightPressed) {
         shipX += 5;
         if (shipX + shipWidth > canvas.width){
@@ -124,6 +199,10 @@ function keyDownHandler(e) {
     if(e.key=="ArrowUp" || e.code == "Space") {
         spacebar = true;
     }
+    if(e.key=="ArrowDown") {
+        down = true;
+    }
+
 }
 
 function keyUpHandler(e) {
@@ -135,6 +214,9 @@ function keyUpHandler(e) {
     }
     if(e.key=="ArrowUp" || e.code == "Space") {
         spacebar = false;
+    }
+    if(e.key=="ArrowDown") {
+        down = false;
     }
 }
 
