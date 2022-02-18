@@ -34,6 +34,7 @@ let space = 0;
 let score = 0;
 let hp = 3;
 let hplangth = 20;
+let spaceHp = 0;
 
 
 function randomInt(max) {
@@ -152,23 +153,23 @@ function newEnemy1(){//makes new enemy1
 
 }
 
-function newHp(){
+function newHpPower(){
     
     randomInt(200);
     
     if (r==1 && spaceHp==1){
-        randomNum(canvas.width - hplangth);
-        hpIncrease[0]=r;
-        randomNum(canvas.height - hplangth - 2*shipHeight);
-        hpIncrease[1]=r;
-        hpIncrease[2]=1;
+        //randomNum(canvas.width - hplangth);
+        //hpIncrease[0]=r;
+        //randomNum(canvas.height - hplangth - 2*shipHeight);
+        //hpIncrease[1]=r;
+        //hpIncrease[2]=1;
         
         
-        spaceHp=0;
+        //spaceHp=0;
         
 }
 
-function drawHp(){
+function drawHpPower(){
     if (hpIncrease[2]==1){
         ctx.beginPath();
         ctx.rect(shipX, canvas.height-shipHeight, shipWidth, shipHeight);
