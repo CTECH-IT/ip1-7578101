@@ -18,6 +18,7 @@ let spacebar = false;
 let ds = 6;
 const bullets = [];
 const enemy1 = [];
+const hpIncrease = [0, 0, 0];
 let numenemy1 = 0;
 let numBullets = 0
 let x=0;
@@ -29,6 +30,10 @@ let enemy1Height = 30;
 let enemy1Width = 30;
 let dEnemy1 = 2
 let r=0;
+let space = 0;
+let score = 0;
+let hp = 3;
+let hplangth = 20;
 
 
 function randomInt(max) {
@@ -99,6 +104,14 @@ function drawEnemy(){
             ctx.closePath();
             y+=dEnemy1;
             enemy1[i+1]=y;
+            if (y >= canvas.height){
+                hp--;
+                if (hp==0){//end game
+                    alert("Game Over");
+                    document.location.reload();
+                    clearInterval(interval);
+                }
+            }
         }
     }
 }
@@ -117,18 +130,54 @@ function newEnemy1(){//makes new enemy1
             h2=0
         }
     }
-    randomInt(500);
-    q=r;
-    if (q==1){
+    if (score<19000){
+        randomInt(200 - score/100);
+    } else if (score>=19000){
+        randomInt(10);
+    }
+    if (r==1 && space<=0){
         randomNum(canvas.width - enemy1Width);
         enemy1.push(r);
         enemy1.push(0);
         enemy1.push(3);
         numenemy1+=1;
+        if (score<10000){
+            space=200 - score/100;
+        } else if(score>=10000){
+            space=100;
+        }
+        
         
     }
 
 }
+
+function newHp(){
+    
+    randomInt(200);
+    
+    if (r==1 && spaceHp==1){
+        randomNum(canvas.width - hplangth);
+        hpIncrease[0]=r;
+        randomNum(canvas.height - hplangth - 2*shipHeight);
+        hpIncrease[1]=r;
+        hpIncrease[2]=1;
+        
+        
+        spaceHp=0;
+        
+}
+
+function drawHp(){
+    if (hpIncrease[2]==1){
+        ctx.beginPath();
+        ctx.rect(shipX, canvas.height-shipHeight, shipWidth, shipHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
 function enemy1Collision(){
     for (let i = 0; i <= numenemy1*3; i+=3){
         x=enemy1[i];
@@ -143,6 +192,10 @@ function enemy1Collision(){
                     if ((y<n+shootRadius && y+enemy1Height>n-shootRadius) && (x<k+shootRadius && x+enemy1Width>k-shootRadius) ){
                         bullets[l+1]=0;
                         enemy1[i+2]-=1;
+                        if (enemy1[i+2]==0){
+                            score+=100;
+                            dEnemy1+=0.05
+                        }
                     }
 
                     
@@ -152,6 +205,26 @@ function enemy1Collision(){
             
         }
     }
+}
+
+
+function enemySpaceing(){
+    if (space >0){
+        space--;
+    }
+    
+}
+
+function drawScore(){
+    ctx.font = "16px Arial"
+    ctx.fillStyle = "#0095DD"
+    ctx.fillText("Score: " + score, 8, 20)
+}
+
+function drawHp(){
+    ctx.font = "16px Arial"
+    ctx.fillStyle = "#0095DD"
+    ctx.fillText("HP: " + hp, canvas.width-55, 20)
 }
 
 
@@ -172,12 +245,14 @@ function drawShip(){//draws the ship
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawShip();
-    
+    enemySpaceing();
     newShoot();
     drawShoot();
     newEnemy1();
     drawEnemy();
     enemy1Collision();
+    drawScore();
+    drawHp();
     if(rightPressed) {
         shipX += 5;
         if (shipX + shipWidth > canvas.width){
@@ -237,4 +312,3 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 let interval = setInterval(draw, 10);
-//test
