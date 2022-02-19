@@ -15,7 +15,7 @@ let dx = 5;
 let n = 0;
 let k = shipX;
 let spacebar = false;
-let ds = 6;
+let ds = 7;
 const bullets = [];
 const enemy1 = [];
 const hpIncrease = [0, 0, 0];
@@ -35,19 +35,20 @@ let score = 0;
 let hp = 3;
 let hplangth = 20;
 let spaceHp = 0;
+let numhp = 1
 
 
-function randomInt(max) {
+function randomInt(max) {//random whole num
     r = Math.floor(Math.random() * max);
   }
 
-  function randomNum(max) {
+  function randomNum(max) {//random num
     r = Math.random() * max;
   }  
 
 
-function newShoot() {
-    if (spacebar==true && h==0){//makes new bullet
+function newShoot() {//makes new bullet
+    if (spacebar==true && h==0){
         bullets.push(shipX + shipWidth/2);
         bullets.push(canvas.height-shipHeight-shootRadius);
         numBullets+=1;
@@ -82,7 +83,7 @@ function drawShoot() {//updates existing bullets
     
 }
 
-function drawEnemy(){
+function drawEnemy(){//updates enemys
     for (let i = 0; i <= numenemy1*3; i+=3){
         x=enemy1[i];
         y=enemy1[i+1];
@@ -117,7 +118,7 @@ function drawEnemy(){
     }
 }
 
-function newEnemy1(){//makes new enemy1
+function newEnemy1(){//makes new enemy
     if ((down && h2==0)){
         randomNum(canvas.width - enemy1Width);
         enemy1.push(r);
@@ -131,10 +132,10 @@ function newEnemy1(){//makes new enemy1
             h2=0
         }
     }
-    if (score<19000){
-        randomInt(200 - score/100);
-    } else if (score>=19000){
-        randomInt(10);
+    if (score<3000){
+        randomInt(200 - score/20);
+    } else if (score>=3000){
+        randomInt(50);
     }
     if (r==1 && space<=0){
         randomNum(canvas.width - enemy1Width);
@@ -142,10 +143,10 @@ function newEnemy1(){//makes new enemy1
         enemy1.push(0);
         enemy1.push(3);
         numenemy1+=1;
-        if (score<10000){
-            space=200 - score/100;
-        } else if(score>=10000){
-            space=100;
+        if (score<2000){
+            space=200 - score/20;
+        } else if(score>=2000){
+            space=50;
         }
         
         
@@ -153,33 +154,64 @@ function newEnemy1(){//makes new enemy1
 
 }
 
-function newHpPower(){
+function newHpPower(){//has 1 in 500 chance to make new hp power up every frame after you get 500 points 
     
-    randomInt(200);
+    randomInt(500);
     
-    if (r==1 && spaceHp==1){
-        //randomNum(canvas.width - hplangth);
-        //hpIncrease[0]=r;
-        //randomNum(canvas.height - hplangth - 2*shipHeight);
-        //hpIncrease[1]=r;
-        //hpIncrease[2]=1;
+    if (r==1 && spaceHp>=5){
+        randomNum(canvas.width - hplangth);
+        hpIncrease.push(r);
+        randomNum(canvas.height - hplangth - 2*shipHeight);
+        hpIncrease.push(r);
+        hpIncrease.push(1);
         
-        
-        //spaceHp=0;
+        numhp+=1;
+        spaceHp-=5;
+    }  
         
 }
 
-function drawHpPower(){
-    if (hpIncrease[2]==1){
+function drawHpPower(){//updates hp powerup
+  for (let i = 0; i <= numhp*3; i+=3){
+    x=hpIncrease[i];
+    y=hpIncrease[i+1];
+    z=hpIncrease[i+2];
+        
+    if (z==1){
         ctx.beginPath();
-        ctx.rect(shipX, canvas.height-shipHeight, shipWidth, shipHeight);
-        ctx.fillStyle = "#0095DD";
+        
+        ctx.rect(x, y, hplangth, hplangth);
+        ctx.fillStyle = "#AF16F2";
         ctx.fill();
         ctx.closePath();
     }
+  }
 }
 
-function enemy1Collision(){
+function hpPowerCollision(){//detects when hp powerup has been hit
+  for (let i = 0; i <= numhp*3; i+=3){
+    x=hpIncrease[i];
+    y=hpIncrease[i+1];
+    z=hpIncrease[i+2];
+
+    for (let l = 0; l <= numBullets*2; l+=2){
+        n=bullets[l+1];
+        k=bullets[l];
+        if (n > 0){
+          if ((x<k+shootRadius && x+hplangth>k-shootRadius) && (y<n+shootRadius && y+hplangth>n-shootRadius) && z==1){
+                        bullets[l+1]=0;
+                        hpIncrease[i+2]=0;
+                        hp+=1;
+                        
+                        }
+                    }
+
+                    
+                }
+  }
+}
+
+function enemy1Collision(){//detects when enemy has been hit
     for (let i = 0; i <= numenemy1*3; i+=3){
         x=enemy1[i];
         y=enemy1[i+1];
@@ -196,6 +228,7 @@ function enemy1Collision(){
                         if (enemy1[i+2]==0){
                             score+=100;
                             dEnemy1+=0.05
+                            spaceHp+=1
                         }
                     }
 
@@ -209,20 +242,20 @@ function enemy1Collision(){
 }
 
 
-function enemySpaceing(){
+function enemySpaceing(){//couses game to wait a cirten amount of frames before new enemy can spawn
     if (space >0){
         space--;
     }
     
 }
 
-function drawScore(){
+function drawScore(){//updates score
     ctx.font = "16px Arial"
     ctx.fillStyle = "#0095DD"
     ctx.fillText("Score: " + score, 8, 20)
 }
 
-function drawHp(){
+function drawHp(){//updates hp
     ctx.font = "16px Arial"
     ctx.fillStyle = "#0095DD"
     ctx.fillText("HP: " + hp, canvas.width-55, 20)
@@ -243,7 +276,7 @@ function drawShip(){//draws the ship
     ctx.closePath();
 }
 
-function draw() {
+function draw() {//draws new frame
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawShip();
     enemySpaceing();
@@ -252,8 +285,12 @@ function draw() {
     newEnemy1();
     drawEnemy();
     enemy1Collision();
+    drawHpPower();
     drawScore();
     drawHp();
+    newHpPower();
+    
+    hpPowerCollision();
     if(rightPressed) {
         shipX += 5;
         if (shipX + shipWidth > canvas.width){
@@ -267,13 +304,13 @@ function draw() {
         }
     }
 
-    //test();
+    
 
 }
 
 
 
-function keyDownHandler(e) {
+function keyDownHandler(e) {//detects when keys are pushed down
     if(e.key=="Right" || e.key == "ArrowRight") {
         rightPressed = true;
     }
@@ -289,7 +326,7 @@ function keyDownHandler(e) {
 
 }
 
-function keyUpHandler(e) {
+function keyUpHandler(e) {//detects when keys stop being pushed
     if(e.key=="Right" || e.key == "ArrowRight") {
         rightPressed = false;
     }
