@@ -119,19 +119,19 @@ function drawEnemy(){//updates enemys
 }
 
 function newEnemy1(){//makes new enemy
-    if ((down && h2==0)){
-        randomNum(canvas.width - enemy1Width);
-        enemy1.push(r);
-        enemy1.push(0);
-        enemy1.push(3);
-        numenemy1+=1;
-        h2=1
-    }
-    if (h2==1){
-        if (down==false){          
-            h2=0
-        }
-    }
+    //if ((down && h2==0)){
+        //randomNum(canvas.width - enemy1Width);
+        //enemy1.push(r);
+        //enemy1.push(0);
+        //enemy1.push(3);
+        //numenemy1+=1;
+        //h2=1
+    //}
+    //if (h2==1){
+    //    if (down==false){          
+    //        h2=0
+    //    }
+    //}
     if (score<3000){
         randomInt(200 - score/20);
     } else if (score>=3000){
