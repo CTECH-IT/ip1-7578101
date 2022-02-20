@@ -144,9 +144,9 @@ function newEnemy1(){//makes new enemy
         enemy1.push(3);
         numenemy1+=1;
         if (score<2000){
-            space=200 - score/20;
+            space=200 - score/40;
         } else if(score>=2000){
-            space=50;
+            space=150;
         }
         
         
